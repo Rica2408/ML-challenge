@@ -21,6 +21,7 @@ Este proyecto hace uso de las siguientes librerías:
 - [Material-UI](https://mui.com/): Librería de componentes de React para un desarrollo más rápido y fácil.
 - [Fake Store API](https://fakestoreapi.com/): API falsa para simulación de tiendas en línea.
 - [Swiper](https://swiperjs.com/): Moderno deslizador de JavaScript con transiciones de hardware aceleradas.
+- version de node 18.19
 
 ## Puntos Cubiertos
 
