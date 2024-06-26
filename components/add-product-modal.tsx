@@ -52,7 +52,6 @@ const AddProductoModal = ({ open, handleClose, setLocalProducts, products, setTe
         const newProduct = await addProduct(product, setTextAlert);
         const id = Math.floor(Math.random() * (2000 - 21 + 1)) + 21
         setLocalProducts([{...product, id}, ...products]);
-        //save on the local storage
         localStorage.setItem('products', JSON.stringify([{...newProduct.product, id}, ...localStorageProducts]));
         setShowAlert(true);
         setProduct({

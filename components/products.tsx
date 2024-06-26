@@ -6,6 +6,7 @@ import { Alert, Box, Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import AddProductoModal from './add-product-modal';
+
 type ProductProps = {
     products: ProductType[];
 }

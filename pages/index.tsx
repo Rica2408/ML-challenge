@@ -1,6 +1,9 @@
 import Products from "@/components/products"
 import { ProductType } from "./api/products";
 import { Box } from "@mui/material";
+import { NextPageContext } from 'next';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 type IndexPageProps = {
     products: ProductType[];
@@ -44,10 +47,6 @@ const IndexPage = ({ products }: IndexPageProps) => {
         </Box>
     )
 }
-
-import { NextPageContext } from 'next';
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
 export const getServerSideProps = async (content: NextPageContext) => {
     const { category } = content.query;

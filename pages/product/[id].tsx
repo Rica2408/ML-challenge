@@ -36,8 +36,8 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
   const [showAlert, setShowAlert] = useState(false);
   const [textAlert, setTextAlert] = useState('');
   const [auxProduct, setAuxProduct] = useState(product);
-  const toggleEdit = () => setIsEditabled(!isEditabled);
   const [isCancel, setIsCancel] = useState(false);
+  const toggleEdit = () => setIsEditabled(!isEditabled);
 
   const resetProductDetails = () => {
     setIsCancel(true);

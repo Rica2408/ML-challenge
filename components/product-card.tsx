@@ -106,7 +106,7 @@ const ProductCard: FC<ProductCardProps> = ({ product, isEditabled = false, detai
                 />
             ) :
                 <CardMedia
-                    sx={{ ...styles.media, objectFit: 'contain', padding: '16px' }} // Added padding: '16px'
+                    sx={{ ...styles.media, objectFit: 'contain', padding: '16px' }}
                     component="img"
                     image={product.image || '/not_found.jpg'}
                     alt={product.title}
