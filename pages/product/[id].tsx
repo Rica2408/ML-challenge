@@ -107,11 +107,11 @@ const ProductDetails = ({ product }: ProductDetailsProps) => {
           onClick={isEditabled ? resetProductDetails : toggleEdit}
           style={{ marginRight: isEditabled ? '10px' : '0', backgroundColor: '#1976d2', color: 'white' }}
         >
-          {isEditabled ? 'Cancel' : 'Edit'}
+          {isEditabled ? 'Cancelar' : 'Editar'}
         </Button>
         {isEditabled && (
           <Button onClick={saveChanges} style={{ backgroundColor: '#4caf50', color: 'white' }}>
-            Save
+            Guardar
           </Button>
         )}
       </Box>

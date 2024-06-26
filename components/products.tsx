@@ -65,6 +65,7 @@ const Products = ({ products }: ProductProps) => {
         }, 3000);
         return () => clearTimeout(timer);
     }, [showAlert]);
+
     return (
         <Box sx={{ height: "100%", alignContent: "center" }}>
             <Carousel
