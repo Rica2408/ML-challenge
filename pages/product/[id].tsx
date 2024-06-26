@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, use, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Alert, Box, Button } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import ProductCard from '@/components/product-card';
