@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 
 import CloseIcon from '@mui/icons-material/Close';
 import { Dispatch, SetStateAction, useState } from "react";
-import { ProductType } from "@/pages/api/products";
+import { ProductType } from "../api/products/route";
 
 type AddProductoModalProps = {
     open: boolean,
@@ -52,7 +52,7 @@ const AddProductoModal = ({ open, handleClose, setLocalProducts, products, setTe
         const newProduct = await addProduct(product, setTextAlert);
         const id = Math.floor(Math.random() * (2000 - 21 + 1)) + 21
         setLocalProducts([{...product, id}, ...products]);
-        localStorage.setItem('products', JSON.stringify([{...newProduct.product, id}, ...localStorageProducts]));
+        localStorage.setItem('products', JSON.stringify([{...newProduct, id}, ...localStorageProducts]));
         setShowAlert(true);
         setProduct({
             title: '',

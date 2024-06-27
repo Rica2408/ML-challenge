@@ -1,7 +1,8 @@
-import IndexPage from '@/pages';
-import { ProductType } from '@/pages/api/products';
+import { ProductType } from '@/app/api/products/route';
+import IndexPage from '@/app/page';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import fetchMock from 'jest-fetch-mock';
 
 const mockProducts: ProductType[] = [
     {
@@ -22,30 +23,48 @@ const mockProducts: ProductType[] = [
     },
 ];
 
-jest.mock('next/router', () => ({
+jest.mock('next/navigation', () => ({
+    useParams: jest.fn().mockReturnValue({ id: '1' }),
     useRouter: jest.fn().mockReturnValue({
-        query: {
-            category: 'all',
-            id: 1,
-        },
+        push: jest.fn(),
+        replace: jest.fn(),
+    }),
+    useSearchParams: jest.fn().mockReturnValue({
+        get: jest.fn()
     }),
 }));
+
 
 jest.mock('react-multi-carousel', () => ({
     __esModule: true,
     default: jest.fn().mockImplementation(({ children }) => <div>{children}</div>),
-  }));
+}));
+
+beforeAll(() => {
+    fetchMock.enableMocks();
+});
+
+beforeEach(() => {
+    fetchMock.resetMocks();
+});
 
 
 describe('Deberia desplegar productos', () => {
     it('Desplegar productos', async () => {
-        render(<IndexPage products={mockProducts} />);
+        fetchMock.mockResponseOnce(JSON.stringify(mockProducts));
+
+        const jsx = await IndexPage({ searchParams: { category: "all" } });
+        render(jsx);
+
         await waitFor(() => expect(screen.getByText(mockProducts[0].title)).toBeInTheDocument());
-        
     });
 
     it('Desplegar modal y agregar un nuevo producto ', async () => {
-        render(<IndexPage products={mockProducts} />);
+        fetchMock.mockResponseOnce(JSON.stringify(mockProducts));
+
+        const jsx = await IndexPage({ searchParams: { category: "all" } });
+        render(jsx);
+
         await waitFor(() => expect(screen.getByText(mockProducts[0].title)).toBeInTheDocument());
         const addButton = screen.getByText(/Nuevo producto/i);
         expect(addButton).toBeInTheDocument();

@@ -1,18 +1,21 @@
+'use client'
+
 import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState, MouseEvent } from "react";
-import { useRouter } from "next/router";
-import { useParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 export const categories = ["men's clothing", "jewelery", "electronics", "women's clothing", "all"];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {
     const router = useRouter();
-    const { id } = useParams();
+    const params = useParams();
+    const id = params?.id as string;
 
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-    const { category } = router.query;
+    const searchParams = useSearchParams()
+    const category = searchParams.get('category');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl)
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -20,11 +23,7 @@ const Navbar = () => {
     };
     const handleClose = (category: string) => {
         setAnchorEl(null);
-        router.push({
-            pathname: '',
-            query: { category },
-        });
-
+        router.replace('?category=' + category);
     };
 
     const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -39,7 +38,7 @@ const Navbar = () => {
         <AppBar position="static" sx={{ bgcolor: '#ffe600' }}>
             <Container maxWidth={false}>
                 <Toolbar disableGutters>
-                    {id && <IconButton onClick={() => router.back()}>
+                    {id && <IconButton onClick={() => router.push("/")}>
                         <ArrowBackIcon sx={{ color: "#06437c" }} />
                     </IconButton>}
                     <Typography

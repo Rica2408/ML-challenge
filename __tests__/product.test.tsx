@@ -1,6 +1,19 @@
-import { ProductType } from '@/pages/api/products';
-import ProductDetails from '@/pages/product/[id]';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+import { ProductType } from '@/app/api/products/route';
+import ProductDetails from '@/app/product/[id]/page';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import fetchMock from 'jest-fetch-mock';
+
+jest.mock('next/navigation', () => ({
+    useParams: jest.fn().mockReturnValue({ id: '1' }),
+    useRouter: jest.fn().mockReturnValue({
+        push: jest.fn(),
+        replace: jest.fn(),
+    }),
+    useSearchParams: jest.fn().mockReturnValue({
+        get: jest.fn()
+    }),
+}));
 
 const mockProducts: ProductType[] = [
     {
@@ -21,25 +34,21 @@ const mockProducts: ProductType[] = [
     },
 ];
 
-jest.mock('next/router', () => ({
-    useRouter: jest.fn().mockReturnValue({
-        query: {
-            catalog: 'all',
-            id: 1,
-        },
-    }),
-}));
+beforeAll(() => {
+    fetchMock.enableMocks();
+});
 
-jest.mock('react-multi-carousel', () => ({
-    __esModule: true,
-    default: jest.fn().mockImplementation(({ children }) => <div>{children}</div>),
-}));
-
+beforeEach(() => {
+    fetchMock.resetMocks();
+});
 
 describe('Deberia desplegar productos', () => {
     it('Desplegar detalles del producto', async () => {
-        render(<ProductDetails product={mockProducts[0]} />);
-
+        fetchMock.mockResponseOnce(JSON.stringify(mockProducts[0]));
+        require('next/navigation').useParams.mockReturnValueOnce({ id: 1 });
+        await act(async () => {
+            render(<ProductDetails />);
+        });
         const price = screen.getByLabelText(/Precio/i);
         const title = screen.getByLabelText(/Titulo/i);
 
@@ -50,8 +59,11 @@ describe('Deberia desplegar productos', () => {
     });
 
     it('Mostrar vista para editar y aprimir el boton de cancelar', async () => {
-        render(<ProductDetails product={mockProducts[0]} />);
+        fetchMock.mockResponseOnce(JSON.stringify(mockProducts[0]));
 
+        await act(async () => {
+            render(<ProductDetails />);
+        });
         await waitFor(() => {
             const editButton = screen.getByText(/Editar/i);
             expect(editButton).toBeInTheDocument();
@@ -72,8 +84,10 @@ describe('Deberia desplegar productos', () => {
     });
 
     it('Mostrar vista para editar y aprimir el boton de guardar', async () => {
-        render(<ProductDetails product={mockProducts[0]} />);
-
+        fetchMock.mockResponseOnce(JSON.stringify(mockProducts[0]));
+        await act(async () => {
+            render(<ProductDetails />);
+        });
         await waitFor(() => {
             const editButton = screen.getByText(/Editar/i);
             expect(editButton).toBeInTheDocument();

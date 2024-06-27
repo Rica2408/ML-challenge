@@ -1,4 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
+import { NextResponse } from "next/server";
 
 export type ProductType = {
     id: number,
@@ -14,29 +15,27 @@ export type ProductType = {
     error?: string
 }
 
-type ResponseData = {
-    product?: ProductType,
-    error?: any
-}
+export async function GET(req: NextApiRequest) {
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>
-) {
-    //get categories from the url
-    const { category } = req.query;
-    if (category) {
+    const url = req.url ?? ""
+    const parsedUrl = new URL(url);
+    const category = parsedUrl.searchParams.get("category");
+
+    if (category && category !== "all") {
         try {
             const response = await fetch(`https://fakestoreapi.com/products/category/${category}`);
             const products = await response.json();
-            res.status(200).json(products)
+            return NextResponse.json(products)
         } catch (error) {
-            res.status(500).json({ error: "error al obtener los productos" });
+            console.error(error);
         }
     }
     try {
         const response = await fetch('https://fakestoreapi.com/products');
         const products = await response.json();
-        res.status(200).json(products)
+        return NextResponse.json(products)
+
     } catch (error) {
-        res.status(500).json({ error: "error al obtener los productos" });
+        console.error(error);
     }
 }

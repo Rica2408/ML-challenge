@@ -1,11 +1,13 @@
-import { ProductType } from '@/pages/api/products';
+'use client'
+
 import ProductCard from './product-card';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { Alert, Box, Button } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import AddProductoModal from './add-product-modal';
+import { ProductType } from '../api/products/route';
 
 type ProductProps = {
     products: ProductType[];
@@ -31,8 +33,8 @@ const responsive = {
 };
 
 const Products = ({ products }: ProductProps) => {
-    const router = useRouter();
-    const { category } = router.query;
+    const searchParams = useSearchParams()
+    const category = searchParams.get('category');
     const carouselRef = useRef<any>(null);
     const [localProducts, setLocalProducts] = useState<ProductType[]>([])
     const [open, setOpen] = useState(false);
@@ -54,11 +56,32 @@ const Products = ({ products }: ProductProps) => {
         const localStorageProducts = storedProducts ? JSON.parse(storedProducts) : [];
         if (category && category !== 'all') {
             const filteredProducts = localStorageProducts.filter((product: ProductType) => product.category === category);
-            setLocalProducts([...filteredProducts, ...products]);
+            let allProducts = [...products];
+            filteredProducts.forEach((element: ProductType) => {
+                const auxElement = products.find((product) => product.id == element.id);
+                if (auxElement) {
+                    const productIndex = allProducts.findIndex((product) => product.id == element.id);
+                    allProducts[productIndex] = element;
+                } else {
+                    allProducts = [element, ...allProducts];
+                }
+            });
+            setLocalProducts(allProducts);
         } else {
-            setLocalProducts([...localStorageProducts, ...products]);
+            let allProducts = [...products];
+            localStorageProducts.forEach((element: ProductType) => {
+                const auxElement = products.find((product) => product.id == element.id);
+                if (auxElement) {
+                    const productIndex = allProducts.findIndex((product) => product.id == element.id);
+                    allProducts[productIndex] = element;
+                } else {
+                    allProducts = [element, ...allProducts];
+                }
+            });
+
+            setLocalProducts(allProducts);
         }
-    }, []);
+    }, [products]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -93,12 +116,14 @@ const Products = ({ products }: ProductProps) => {
                     </Box>
                 ))}
             </Carousel>
-            <Box display="flex" justifyContent="center" m={1}>
-                <Button variant="contained" onClick={() => setOpen(true)}>
-                    Nuevo producto
-                </Button>
-            </Box>
-            <AddProductoModal 
+            {localProducts.length &&
+                <Box display="flex" justifyContent="center" m={1}>
+                    <Button variant="contained" onClick={() => setOpen(true)}>
+                        Nuevo producto
+                    </Button>
+                </Box>
+            }
+            <AddProductoModal
                 open={open}
                 handleClose={() => setOpen(false)}
                 setLocalProducts={setLocalProducts}

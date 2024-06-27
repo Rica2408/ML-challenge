@@ -52,6 +52,9 @@ El proyecto ofrece una experiencia de usuario interactiva y funcionalidades espe
 
 - **Editar Productos**: Los usuarios tienen la capacidad de editar cualquier producto existente. Esto incluye modificar cualquier aspecto del producto, como su nombre, precio, descripción, o categoría. Las modificaciones se reflejan inmediatamente en la interfaz de usuario y se guardan en `localStorage`, asegurando que los cambios persistan entre sesiones.
 
+- **Not found Page**: Se agrego funcionalidad para mandar un componente default cuando la url no coincide con el el router
+
+
 Estas funcionalidades están diseñadas para ofrecer una experiencia de usuario completa y satisfactoria, permitiendo una gestión eficaz de los productos en la tienda en línea simulada.
 
 - Al hacer click en la card, redirecciona al detalle del producto.

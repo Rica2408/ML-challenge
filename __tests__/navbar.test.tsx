@@ -1,22 +1,16 @@
+import Navbar from '@/app/components/navbar';
 import { render, screen } from '@testing-library/react';
-import Navbar from '@/components/navbar';
-import { useRouter } from 'next/router';
-
-// Mocking useRouter from Next.js
-jest.mock('next/router', () => ({
-    useRouter: jest.fn().mockReturnValue({
-        query: {
-            category: 'all',
-            id: '1', // Ensuring this matches the expected type (string if it's from URL)
-        },
-    }),
-}));
-
 
 jest.mock('next/navigation', () => ({
-    useParams: jest.fn()
-  }));
-
+    useParams: jest.fn(),
+    useRouter: jest.fn().mockReturnValue({
+        push: jest.fn(),
+        replace: jest.fn(),
+    }),
+    useSearchParams: jest.fn().mockReturnValue({
+        get: jest.fn()
+    }),
+}));
 
 describe('Navbar', () => {
     it('Desplegar categories', () => {

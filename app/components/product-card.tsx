@@ -1,7 +1,9 @@
+'use client'
+
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, Box, TextField, InputAdornment } from '@mui/material';
-import { ProductType } from '@/pages/api/products';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { ProductType } from '../api/products/route';
 
 type ProductCardProps = {
     product: ProductType,
@@ -25,7 +27,7 @@ const styles = {
     },
 };
 
-const ProductCard: FC<ProductCardProps> = ({ product, isEditabled = false, details, isCancel, setIsCancel, setCurrentProduct }) => {
+const ProductCard: FC<ProductCardProps> = ({ product, isEditabled = false, details, isCancel, setIsCancel, setCurrentProduct = () => {} }) => {
     const router = useRouter();
     const [title, setTitle] = useState(product.title || '');
     const [description, setDescription] = useState(product.description || '');
@@ -34,25 +36,22 @@ const ProductCard: FC<ProductCardProps> = ({ product, isEditabled = false, detai
 
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setTitle(event.target.value);
-        if (setCurrentProduct) {
-            setCurrentProduct({ ...product, title: event.target.value });
-        }
+            setCurrentProduct((value) => ({ ...value, title: event.target.value }));
+        
     };
 
     const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setDescription(event.target.value);
-        if (setCurrentProduct) {
-            setCurrentProduct({ ...product, description: event.target.value });
-        }
+            setCurrentProduct((value) => ({ ...value, description: event.target.value }));
+        
     };
 
     const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = event.target.value;
         if (parseFloat(value) >= 0) {
             setPrice(value);
-            if (setCurrentProduct) {
-                setCurrentProduct({ ...product, price: parseFloat(value) });
-            }
+                setCurrentProduct(v => ({ ...v, price: parseFloat(value) }));
+        
         }
     };
 
@@ -60,9 +59,8 @@ const ProductCard: FC<ProductCardProps> = ({ product, isEditabled = false, detai
         const value = event.target.value;
         if (parseFloat(value) >= 0 && parseFloat(value) <= 5) {
             setRating(value);
-            if (setCurrentProduct) {
-                setCurrentProduct({ ...product, rating: { rate: parseFloat(value), count: product.rating?.count ?? 0 } });
-            }
+                setCurrentProduct(v =>({ ...v, rating: { rate: parseFloat(value), count: product.rating?.count ?? 0 } }));
+            
         }
     };
 
@@ -74,7 +72,6 @@ const ProductCard: FC<ProductCardProps> = ({ product, isEditabled = false, detai
             setRating(product.rating?.rate.toString() || '');
         }
     }, [product]);
-
 
     useEffect(() => {
         if (isCancel && setIsCancel) {
