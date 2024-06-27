@@ -130,7 +130,7 @@ const Products = ({ products }: ProductProps) => {
                 products={localProducts}
                 setShowAlert={setShowAlert}
                 setTextAlert={setTextAlert}
-
+                category={category ?? ''}
             />
             {showAlert && (
                 <Alert variant="outlined" severity={textAlert === "Error" ? "error" : "success"}>

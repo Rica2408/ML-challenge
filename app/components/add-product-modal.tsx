@@ -12,6 +12,7 @@ type AddProductoModalProps = {
     products: ProductType[]
     setShowAlert: Dispatch<SetStateAction<boolean>>
     setTextAlert: Dispatch<SetStateAction<string>>
+    category: string
 }
 
 const addProduct = async (product: ProductType, setTextAlert: Dispatch<SetStateAction<string>>) => {
@@ -32,7 +33,7 @@ const addProduct = async (product: ProductType, setTextAlert: Dispatch<SetStateA
     }
 }
 
-const AddProductoModal = ({ open, handleClose, setLocalProducts, products, setTextAlert, setShowAlert }: AddProductoModalProps) => {
+const AddProductoModal = ({ open, handleClose, setLocalProducts, products, setTextAlert, setShowAlert, category }: AddProductoModalProps) => {
     const [product, setProduct] = useState<ProductType>({
         title: '',
         description: '',
@@ -51,7 +52,9 @@ const AddProductoModal = ({ open, handleClose, setLocalProducts, products, setTe
         const localStorageProducts = storedProducts ? JSON.parse(storedProducts) : [];
         const newProduct = await addProduct(product, setTextAlert);
         const id = Math.floor(Math.random() * (2000 - 21 + 1)) + 21
-        setLocalProducts([{...product, id}, ...products]);
+        if (category === product.category || category === 'all' || !category) {
+            setLocalProducts([{...product, id}, ...products]);
+        }
         localStorage.setItem('products', JSON.stringify([{...newProduct, id}, ...localStorageProducts]));
         setShowAlert(true);
         setProduct({
